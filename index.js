@@ -1,8 +1,10 @@
 // TODO: Include packages needed for this application
-const { createPromptModule } = require('inquirer');
+import inquirer from 'inquirer';
+import * as fs from 'fs';
+import path from 'path'; 
+import generateMarkdown from './utils/generateMarkdown.mjs';
 
-
-const prompt = createPromptModule()
+const prompt = inquirer.createPromptModule()
 // TODO: Create an array of questions for user input
 const questions = [
     {
@@ -39,7 +41,7 @@ const questions = [
         type: 'list',
         message: "Choose a License: ",
         name: 'license',
-        choices: ['MIT', 'Apache-2.0', '0BSD', 'None']
+        choices: ['MIT', 'Apache2.0', '0BSD', 'None']
     },
     {
         type: 'input',
@@ -54,12 +56,15 @@ const questions = [
 ];
 
 // TODO: Create a function to write README file
-function writeToFile(fileName, data) { }
+function writeToFile(fileName, data) { 
+    return fs.writeFileSync(path.join(process.cwd(),fileName),data)
+}
 
 // TODO: Create a function to initialize app
 async function init() {
     const answers = await prompt(questions)
-    console.log(answers)
+    const data = generateMarkdown(answers)
+    writeToFile('README.md',data)
 }
 
 // Function call to initialize app
